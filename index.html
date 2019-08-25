@@ -13,26 +13,35 @@
       <h3>
         Calculator
       </h3>
-      <div class="calculator__display">0</div>
+      <div class="calculator__screen">
+        <div class="calculator__input__container">
+          <input class="calculator__input" type="text" name="">
+          <span class="character__size__benchmark">9</span>
+        </div>
+        <div class="calculator__result">0</div>
+      </div>
 
       <div class="calculator__keys">
-        <button class="key--operator" data-action="add">+</button>
-        <button class="key--operator" data-action="subtract">-</button>
-        <button class="key--operator" data-action="multiply">&times;</button>
-        <button class="key--operator" data-action="divide">÷</button>
+        <button class="key--operator">+</button>
+        <button class="key--operator">-</button>
+        <button class="key--operator" data-action="*">&times;</button>
+        <button class="key--operator" data-action="/">÷</button>
         <button>7</button>
         <button>8</button>
         <button>9</button>
+        <button class="key--operator" data-action="Backspace">&#8612;</button>
         <button>4</button>
         <button>5</button>
         <button>6</button>
+        <button class="key--operator">(</button>
         <button>1</button>
         <button>2</button>
         <button>3</button>
+        <button class="key--operator">)</button>
         <button>0</button>
-        <button data-action="decimal">.</button>
-        <button data-action="clear">AC</button>
-        <button class="key--equal" data-action="calculate">=</button>
+        <button>.</button>
+        <button data-action="Delete">c</button>
+        <button data-action="calculate">=</button>
       </div>
     </div>
   </main>
