@@ -118,9 +118,15 @@ body {
   justify-content: center;
 }
 
+.character__size__benchmark {
+  visibility: hidden;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+}
+
 .container {
   width: 100%;
-  /*padding-bottom: 20px;*/
 }
 
 .calculator > h3 {
@@ -137,12 +143,33 @@ body {
   overflow: hidden;
 }
 
-.calculator__display {
+.calculator__screen {
   background-color: #222222;
   color: #fff;
+  padding: 0 0.25em;
   font-size: 1.714285714em;
-  padding: 0.5em 0.75em;
+  padding-top: -150px;
+}
+
+.calculator__input__container {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.calculator__screen .calculator__result {
   text-align: right;
+  font-size: 0.75em;
+}
+
+.calculator__screen .calculator__input {
+  display: block;
+  color: #fff;
+  font-size: 0.5em;
+  width: 100%;
+}
+
+.character__size__benchmark {
+  font-size: 0.5em
 }
 
 .calculator__keys {
@@ -175,12 +202,6 @@ body {
 
 .key--operator {
   background-color: #eee;
-}
-
-.key--equal {
-  background-image: linear-gradient(to bottom, #fe886a, #ff7033);
-  grid-column: -2;
-  grid-row: 2 / span 4;
 }
 
 @media only screen and (max-width: 1250px) {
@@ -216,8 +237,26 @@ body {
     padding: 0.7em;
   }
 
-  .calculator__display {
+  .calculator__screen {
     padding: 0.15em;
+  }
+}
+
+@media only screen and (max-width: 400px) {
+  .calculator {
+    font-size: 30px;
+  }
+
+  .calculator__input {
+    font-size: 0.4em
+  }
+
+  .character__size__benchmark {
+    font-size: 0.4em
+  }
+
+  .calculator__result {
+    font-size: 0.6em
   }
 }
 
