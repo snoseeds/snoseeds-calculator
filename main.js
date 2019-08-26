@@ -105,13 +105,15 @@ const startApp = () => {
     // would be called to compute the state of the calculator when any allowed
     // change happens to the input to show appropriate results
     const displayResult = (inputElement, resultElement, leftBracketNos, rightBracketNos, operatorKeyMatcher, bracketKeyMatcher) => {
+      const updatedValue = inputElement.value;
       const areBracketsBalanced = leftBracketNos === rightBracketNos ? true : false;
       const evaluableMinusBalancedBrackets = checkIfExprxnCanBeEvaluated(inputElement,
         operatorKeyMatcher, bracketKeyMatcher);
       if (areBracketsBalanced) {
-        resultElement.textContent = operatorKeyMatcher.test(inputElement.value) === false && leftBracketCount !== 0
+        resultElement.textContent = getEditedNumber(updatedValue, inputElement.selectionStart).endsWith('.') ? "'.' digit?" :
+        (operatorKeyMatcher.test(updatedValue) === false && leftBracketCount !== 0)
         || evaluableMinusBalancedBrackets
-          ? formatResult(eval(parseParantheses(inputElement.value))) : 'waiting';
+          ? formatResult(eval(parseParantheses(updatedValue))) : 'waiting';
       } else {
         resultElement.textContent = 'close ()s!';
       }
@@ -137,7 +139,8 @@ const startApp = () => {
       operatorKey: {
         signature: /[+\-\/*]/,
         route(input, selectionStart, value) {
-          if (selectionStart === 0 || this.signature.test(value[selectionStart - 1])) return 'stop';
+          if ((selectionStart === 0 && /[*\/^]/.test(input)) || this.signature.test(value[selectionStart - 1])
+            || this.signature.test(value[selectionStart])) return 'stop';
         }
       },
       bracket: {
@@ -169,7 +172,9 @@ const startApp = () => {
         signature: /(Backspace)|(Delete)/,
         route(input, selectionStart, value) {
           if (input === 'Backspace') {
-            if (selectionStart === 0) return 'stop';
+            if (selectionStart === 0 || (selectionStart === 1 && /[*\/^]/.test(value[1]))
+              || (allowedGroupsObj.operatorKey.signature.test(value[selectionStart])
+            && allowedGroupsObj.operatorKey.signature.test(value[selectionStart - 2]))) return 'stop';
             const removedItem = value.substr(selectionStart - 1, 1);
             if ('()'.includes(removedItem)) {
               leftBracketCount = removedItem === '(' ? leftBracketCount - 1 : leftBracketCount;
@@ -217,9 +222,23 @@ const startApp = () => {
           growWidthForAutoScroll();
         }
         const operatorKeySignature = allowedGroupsObj.operatorKey.signature;
-        const bracketKeySignature = allowedGroupsObj.bracket.signature;        
-        displayResult(inputDisplay, resultDisplay, leftBracketCount, rightBracketCount,
-          operatorKeySignature, bracketKeySignature);
+        const bracketKeySignature = allowedGroupsObj.bracket.signature;
+        try {
+          displayResult(inputDisplay, resultDisplay, leftBracketCount, rightBracketCount,
+            operatorKeySignature, bracketKeySignature);
+        } catch (error) {
+          console.log(error);
+          const errorDetailsForLogging = {
+            input,
+            previousValue: value,
+            newValue: inputDisplay.value,
+            cursor: selectionStart
+          };
+          console.log(errorDetailsForLogging);
+          // reverse the inclusion of the entry
+          inputDisplay.value = value;
+          inputDisplay.setSelectionRange(selectionStart, selectionStart);
+        }
       }
     };
 
