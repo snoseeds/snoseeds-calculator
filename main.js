@@ -58,13 +58,16 @@ const startApp = () => {
       return formattedExprxn;
     };
 
+    // Make instances of ^ to be replaced with **
+    const parsePower = expression => expression.replace(/\^/g, '**');
+
     // Getting contiguous no that's been presently edited, to be used for stuffs like testing
     // whether it already has a decimal
     const getEditedNumber = (inputVal, selectionStart) => {
       let lowerOperatorBoundary;
       let upperOperatorBoundary = 0;
       let presentlyEditedNoIdx;
-      contiguousNosArray = inputVal.split(/[+\-\/*\(\)]/);
+      contiguousNosArray = inputVal.split(/[+\-\/*\^\(\)]/);
       contiguousNosArray.some((v, i) => {
         lowerOperatorBoundary = upperOperatorBoundary;
         upperOperatorBoundary += v.length + (i === 0 ? 0 : 1);
@@ -113,7 +116,7 @@ const startApp = () => {
         resultElement.textContent = getEditedNumber(updatedValue, inputElement.selectionStart).endsWith('.') ? "'.' digit?" :
         (operatorKeyMatcher.test(updatedValue) === false && leftBracketCount !== 0)
         || evaluableMinusBalancedBrackets
-          ? formatResult(eval(parseParantheses(updatedValue))) : 'waiting';
+          ? formatResult(eval(parsePower(parseParantheses(updatedValue)))) : 'waiting';
       } else {
         resultElement.textContent = 'close ()s!';
       }
@@ -137,9 +140,9 @@ const startApp = () => {
         }
       },
       operatorKey: {
-        signature: /[+\-\/*]/,
+        signature: /[+\-\/*\^]/,
         route(input, selectionStart, value) {
-          if ((selectionStart === 0 && /[*\/^]/.test(input)) || this.signature.test(value[selectionStart - 1])
+          if ((selectionStart === 0 && /[*\/\^]/.test(input)) || this.signature.test(value[selectionStart - 1])
             || this.signature.test(value[selectionStart])) return 'stop';
         }
       },
@@ -151,6 +154,7 @@ const startApp = () => {
               || leftBracketCount < rightBracketCount + 1) return 'stop';
             rightBracketCount++;
           } else {
+            if(value[selectionStart - 1] === '.') return 'stop';
             leftBracketCount++;
           }
         }
@@ -172,7 +176,7 @@ const startApp = () => {
         signature: /(Backspace)|(Delete)/,
         route(input, selectionStart, value) {
           if (input === 'Backspace') {
-            if (selectionStart === 0 || (selectionStart === 1 && /[*\/^]/.test(value[1]))
+            if (selectionStart === 0 || (selectionStart === 1 && /[*\/\^]/.test(value[1]))
               || (allowedGroupsObj.operatorKey.signature.test(value[selectionStart])
             && allowedGroupsObj.operatorKey.signature.test(value[selectionStart - 2]))) return 'stop';
             const removedItem = value.substr(selectionStart - 1, 1);
