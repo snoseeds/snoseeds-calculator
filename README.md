@@ -1,7 +1,7 @@
 # snoseeds-calculator
 Front End JavaScript Powered Simple Mathematical Calculator
 
-It's deployed to `gh-pages` at `https://snoseeds.github.io/snoseeds-calculator/`.
+It's deployed to `gh-pages` [here](https://snoseeds.github.io/snoseeds-calculator/).
 
 The unique features of this calculator app that enables click and keyboard interaction for desktop clients, while preventing keyboard interaction for mobile clients for good user experience include:
 
